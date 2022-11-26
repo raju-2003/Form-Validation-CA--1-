@@ -1,89 +1,172 @@
-import React, {useState} from 'react'
-import "./Form.css"
-function Form() {
-   const[username, setUsername] = useState('');
-   const[email, setEmail] = useState('');
-   const[password, setPassword] = useState('');
-   
-   const [uc, setUc] = useState("color0");
-   const [ec, setEc] = useState("color0");
-   const [pc, setPc] = useState("color0");
+import React, { useState, useEffect } from 'react';
+import "./form.css";
+import { Box, TextField, FormControl, Input, InputLabel, FormHelperText } from '@mui/material';
+
+function Form1() {
+
+    //Initial helper texts
+    const [untxt, setUntxt] = useState(" UserName");
+    const [emtxt, setEmtxt] = useState(" email");
+    const [pwtxt, setPwtxt] = useState(" enter your Password");
+    const [pwlength, setPwlength] = useState("At least 8 characters");
+
+    //To check the Confirm Password
+    const [pw, setPw] = useState("");
+
+    //To change color based on Input
+    const [uc, setUc] = useState("c0");
+    const [ec, setEc] = useState("c0");
+    const [pwc, setPwc] = useState("c0");
+    
+
+    //Handling the UserName Input
+    const handleUn = (event) => {
+        const val = event.target.value;
+
+        if (val === "") {
+            setUntxt("fill the column");
+            setUc("c0");
+        }
+        else if (val === "Madhu") {
+            setUntxt("Correct username");
+            setUc("c4");
+        }
+        else {
+            setUntxt("Incorrect Username");
+            setUc("c2");
+        }
+    }
+
+    //Handling the email Input
+    const handleEm = (event) => {
+        const val = event.target.value;
+
+        if (val ===""){
+            setEmtxt("Enter your Email");
+            setEc("c0");
+        }
+
+        else if (val === "727721eucs064"){
+            setEmtxt("Correct Email-Id");
+            setEc("c4");
+        }
+        else {
+            setEmtxt("Incorrect Email-Id");
+            setEc("c2");
+        }
+    }
+
+    //Handling the Password Input
+    const handlePw = (event) => {
+        const val = event.target.value;
+        setPw(val);
+        // handleCpw();
+
+        if (val.length < 8) {
+            setPwlength("At least 8 characters");
+        }
+        else if (val.length >= 8) {
+            setPwlength("");
+        }
+
+        if (val === "") {
+            setPwtxt("Please enter your Password");
+            setPwc("c0");
+        }
+        else if (pwValidate(event.target.value) === 1) {
+            setPwtxt("Password is weak");
+            setPwc("c1");
+        }
+        else if (pwValidate(event.target.value) === 2) {
+            setPwtxt("Password is good");
+            setPwc("c2");
+        }
+        else if (pwValidate(event.target.value) === 3) {
+            setPwtxt("Password is strong");
+            setPwc("c3");
+        }
+        else if (pwValidate(event.target.value) === 4 && val.length >= 8) {
+            setPwtxt("Password is very strong");
+            setPwc("c4");
+        }
+
+    }
+
+    
+
+    //Validating the password
+    const pwValidate = (pw) => {
+        let strength = 0;
+
+        if (pw.match(/(?=.*[a-z])/)) {
+            strength++;
+        }
+
+        if (pw.match(/(?=.*[A-Z])/)) {
+            strength++;
+        }
+
+        if (pw.match(/(?=.*[0-9])/)) {
+            strength++;
+        }
+
+        if (pw.match(/(?=.*[!@#\$%\^&\*])/)) {
+            strength++;
+        }
+
+        return strength;
+    }
+
+    //Component to be rendered
+    return (
+        <Box className='box' sx={{
+            backgroundColor: 'white',
+            width: 500,
+            height: 500,
+            borderRadius: 10
+        }}>
+            <div className='box-conts'>
+            
+
+                <FormControl variant="standard">
+                    <InputLabel htmlFor="uname">Your UserName</InputLabel>
+                    <Input
+                        id="uname"
+                        onChange={handleUn}
+                    />
+                    <FormHelperText id={uc} sx={{ color: "black" }}>{untxt}</FormHelperText>
+                </FormControl>
+                <br /><br />
 
 
-   const handleusername = (event) => {
-    const un = event.target.value;
-    if(un.trim() === ""){
-          setUsername("Please fill the column")
-          setUc("color1")//red
-    }else if((un.match(/(?=.*[a-z])/) || un.match(/(?=.*[A-Z])/)) && un.length >= 8){
-        setUsername("Username is valid")
-        setUc("color2")//green
-    }else{
-        setUsername("Username is invalid")
-        setUc("colorw")//violet
-    }
-   } 
-
-   const handleemail = (event) => {
-    const em = event.target.value;
-    if(em.trim() === ""){
-        setEmail("Invalid Email")
-        setEc("color1")//red
-    }else if(em.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
-        setEmail("Email is valid")
-        setEc("color2")//green
-    }else{
-        setEmail("Complete typing your email.......")
-        setEc("color3")//yellow
-    }
-   }
-
-   const handlepassword = (event) =>{
-    const pw = event.target.value;
-    if(pw.trim() === ""){
-        setPassword("Please fill the password")
-        setPc("color1")//red
-    }
-    else if(pw.match(/(?=.*[!@#\$%\^&\*])/) && pw.match(/(?=.*[0-9])/) && pw.match(/(?=.*[A-Z])/) && pw.match(/(?=.*[a-z])/) && pw.length > 8){
-        setPassword("Password is very Strong")
-        setPc("color2")//green
-    }
-    else if(pw.match(/(?=.*[a-z])/) && pw.match(/(?=.*[A-Z])/) && pw.match(/(?=.*[0-9])/) && pw.length > 8){
-        setPassword("Password is Strong")
-        setPc("color4")//lightgreen
-    }
-    else if(pw.match(/(?=.*[a-z])/) && pw.match(/(?=.*[A-Z])/) && pw.length >= 8){
-        setPassword("Password is Good")
-        setPc("color5")//orange
-
-    }
-    else if(pw.match(/(?=.*[a-z])/) && pw.length > 8){
-        setPassword("Password is weak")
-        setPc("color1")//red
-    }
-    else if(pw.length < 8){
-        setPassword("Password minimum of 8 characters");
-    }
-   }
+                <FormControl variant="standard">
+                    <InputLabel htmlFor="email"> Your Email-ID</InputLabel>
+                    <Input
+                        id="email"
+                        onChange={handleEm}
+                    />
+                    <FormHelperText id={ec} sx={{ color: "black"}}>{emtxt}</FormHelperText> 
+                </FormControl>
+                <br /><br />
 
 
-  return (
-    <form className='dynamic-form'>
-    <fieldset>
-    <div className='full'>
-    <label >Enter your username</label><br/><br />
-    <input type="text" id = "username" placeholder='Your Username' onChange={handleusername}></input><br/>
-    <p id={uc}>{username}</p>
-    <label>Enter your email</label><br/><br />
-    <input type="email" id = "email" placeholder='Your Email' onChange = {handleemail}></input><br/>
-    <p id={ec}>{email}</p>
-    <label>Enter your Password</label><br/><br />
-    <input type="password" id = "password" placeholder='Your Password' onChange ={handlepassword}></input>
-    <p id={pc}>{password}</p>
-    </div>
-     </fieldset> 
-    </form>
-  )
+                <FormControl variant="standard">
+                    <InputLabel htmlFor="pw">Your Password</InputLabel>
+                    <Input
+                        type="password"
+                        id="pw"
+                        onChange={handlePw}
+                    />
+                    <FormHelperText id="pwl-text" sx={{ color: "black" }}>{pwlength}</FormHelperText>
+                    <FormHelperText id={pwc} sx={{ color: { pwc } }}>{pwtxt}</FormHelperText>
+                </FormControl>
+                <br /><br />
+
+                
+
+            </div>
+        </Box>
+    )
 }
 
-export default Form
+export default Form1;
